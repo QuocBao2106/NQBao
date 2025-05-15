@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Joe's Travel Page</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+
+        body {
+            background-color: #f0f0f0;
+        }
+
+        /* Header */
+        header {
+            background-color: #4B0082;
+            padding: 10px 20px;
+            color: white;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        nav .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: #FFD700;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 20px;
+        }
+
+        nav ul li a {
+            color: white;
+            text-decoration: none;
+            font-size: 16px;
+        }
+
+        nav ul li a:hover {
+            color: #FFD700;
+        }
+
+        /* Main Section */
+        main {
+            text-align: center;
+        }
+
+        /* Hero Section */
+        .hero {
+            position: relative;
+            height: 400px;
+            background: url('assets/extra-files/ocean.jpg') center/cover no-repeat;
+        }
+
+        .hero .overlay {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 0, 0, 0.6);
+            padding: 20px 40px;
+            border-radius: 10px;
+            color: white;
+        }
+
+        .hero .overlay h1 {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .hero .overlay p {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        .hero .overlay button {
+            background-color: #FFD700;
+            border: none;
+            padding: 10px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .hero .overlay button:hover {
+            background-color: #FFC107;
+        }
+
+        /* Highlights Section */
+        .highlights {
+            padding: 40px 20px;
+            background-color: #E0F7FA;
+        }
+
+        .highlights h2 {
+            font-size: 28px;
+            margin-bottom: 30px;
+        }
+
+        .gallery {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        .gallery .card {
+            text-align: center;
+        }
+
+        .gallery .card img {
+            width: 300px;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 10px;
+        }
+
+        .gallery .card p {
+            margin-top: 10px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        /* Footer */
+        footer {
+            background-color: #1C2526;
+            padding: 20px;
+            text-align: center;
+        }
+
+        footer .social-icons {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        footer .social-icons img {
+            width: 30px;
+            height: 30px;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <nav>
+            <div class="logo">TRAVEL GOALS</div>
+            <ul>
+                <li><a href="#">Destinations</a></li>
+                <li><a href="#">About</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <section class="hero">
+            <div class="overlay">
+                <h1>JOE'S TRAVEL PAGE</h1>
+                <p>LET'S EXPLORE THE WORLD TOGETHER!</p>
+                <button>Discover places</button>
+            </div>
+        </section>
+
+        <section class="highlights">
+            <h2>HIGHLIGHTS</h2>
+            <div class="gallery">
+                <div class="card">
+                    <img src="assets/extra-files/cities/miami.jpg" alt="Miami USA">
+                    <p>MIAMI USA</p>
+                </div>
+                <div class="card">
+                    <img src="assets/extra-files/cities/munich.jpg" alt="Munich Germany">
+                    <p>MUNICH GERMANY</p>
+                </div>
+                <div class="card">
+                    <a href="http://en.wikipedia.org/wiki/Barcelona" target="_blank">
+                        <img src="assets/extra-files/cities/barcelona.jpg" alt="Barcelona Spain">
+                    </a>
+                    <p>BARCELONA SPAIN</p>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="social-icons">
+            <img src="assets/extra-files/icons/insta.png" alt="Instagram">
+            <img src="assets/extra-files/icons/facebook.png" alt="Facebook">
+        </div>
+    </footer>
+</body>
+</html>
