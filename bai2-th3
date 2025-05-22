@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Form Đăng Ký</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #7c3aed, #db2777);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .form-container {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.2);
+            max-width: 500px;
+            width: 100%;
+            padding: 40px;
+            margin: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        h1 {
+            text-align: center;
+            color: white;
+            margin-bottom: 30px;
+            font-size: 32px;
+            font-weight: 600;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .form-group {
+            position: relative;
+            margin-bottom: 30px;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px 12px 12px 0;
+            font-size: 16px;
+            border: none;
+            border-bottom: 2px solid rgba(255, 255, 255, 0.5);
+            background: transparent;
+            color: white;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, input:not(:placeholder-shown) {
+            border-color: #7c3aed;
+        }
+
+        label {
+            position: absolute;
+            top: 12px;
+            left: 0;
+            font-size: 16px;
+            color: rgba(255, 255, 255, 0.7);
+            pointer-events: none;
+            transition: all 0.3s ease;
+        }
+
+        input:focus + label, input:not(:placeholder-shown) + label {
+            top: -20px;
+            font-size: 12px;
+            color: #7c3aed;
+        }
+
+        input::placeholder {
+            color: transparent;
+        }
+
+        .error {
+            color: #ff6b6b;
+            font-size: 14px;
+            margin-top: 5px;
+            display: block;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .error.active {
+            opacity: 1;
+        }
+
+        button {
+            position: relative;
+            width: 100%;
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 500;
+            background: linear-gradient(90deg, #7c3aed, #db2777);
+            border: none;
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.3s;
+        }
+
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        button .loader {
+            display: none;
+            width: 20px;
+            height: 20px;
+            border: 3px solid #fff;
+            border-top: 3px solid transparent;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        button.loading .btn-text {
+            opacity: 0;
+        }
+
+        button.loading .loader {
+            display: block;
+        }
+
+        #successMessage {
+            text-align: center;
+            margin-top: 20px;
+            transform: scale(0);
+            transition: transform 0.3s ease;
+        }
+
+        #successMessage.active {
+            transform: scale(1);
+        }
+
+        #successMessage h2 {
+            color: #00ff88;
+            margin-bottom: 20px;
+            font-size: 24px;
+        }
+
+        #viewDetails {
+            background: linear-gradient(90deg, #00ff88, #00c4b4);
+        }
+
+        #viewDetails:hover {
+            background: linear-gradient(90deg, #00e07b, #00b0a0);
+        }
+
+        #details {
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 10px;
+            color: white;
+            font-size: 14px;
+        }
+
+        @keyframes spin {
+            0% { transform: translate(-50%, -50%) rotate(0deg); }
+            100% { transform: translate(-50%, -50%) rotate(360deg); }
+        }
+
+        @media (max-width: 480px) {
+            .form-container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            input, button {
+                font-size: 14px;
+                padding: 10px;
+            }
+
+            label {
+                font-size: 14px;
+            }
+
+            input:focus + label, input:not(:placeholder-shown) + label {
+                font-size: 10px;
+                top: -18px;
+            }
+        }
+
+        @media (prefers-color-scheme: dark) {
+            .form-container {
+                background: rgba(0, 0, 0, 0.3);
+                border: 1px solid rgba(255, 255, 255, 0.1);
+            }
+
+            input {
+                color: #ddd;
+                border-bottom: 2px solid rgba(255, 255, 255, 0.3);
+            }
+
+            label {
+                color: rgba(255, 255, 255, 0.6);
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h1>Đăng Ký</h1>
+        <form id="registerForm">
+            <div class="form-group">
+                <input type="text" id="fullName" name="fullName" required>
+                <label for="fullName">Họ và Tên</label>
+                <span class="error" id="fullNameError"></span>
+            </div>
+            <div class="form-group">
+                <input type="email" id="email" name="email" required>
+                <label for="email">Email</label>
+                <span class="error" id="emailError"></span>
+            </div>
+            <div class="form-group">
+                <input type="password" id="password" name="password" required>
+                <label for="password">Mật khẩu</label>
+                <span class="error" id="passwordError"></span>
+            </div>
+            <div class="form-group">
+                <input type="password" id="confirmPassword" name="confirmPassword" required>
+                <label for="confirmPassword">Nhập lại mật khẩu</label>
+                <span class="error" id="confirmPasswordError"></span>
+            </div>
+            <button type="submit" id="submitBtn">
+                <span class="btn-text">Đăng ký</span>
+                <span class="loader"></span>
+            </button>
+        </form>
+        <div id="successMessage">
+            <h2>Đăng ký thành công!</h2>
+            <button id="viewDetails">Xem chi tiết</button>
+            <div id="details" style="display: none;"></div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            console.log("jQuery is ready!");
+
+            // Xử lý sự kiện submit form
+            $('#registerForm').on('submit', function(e) {
+                e.preventDefault();
+
+                // Lấy giá trị input
+                let fullName = $('#fullName').val().trim();
+                let email = $('#email').val().trim();
+                let password = $('#password').val().trim();
+                let confirmPassword = $('#confirmPassword').val().trim();
+
+                // Reset thông báo lỗi
+                $('.error').removeClass('active').text('');
+
+                // Kiểm tra ràng buộc
+                let isValid = true;
+                if (fullName === '') {
+                    $('#fullNameError').text('Họ và tên không được để trống.').addClass('active');
+                    isValid = false;
+                }
+                if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+                    $('#emailError').text('Email không hợp lệ.').addClass('active');
+                    isValid = false;
+                }
+                if (password.length < 6) {
+                    $('#passwordError').text('Mật khẩu phải có ít nhất 6 ký tự.').addClass('active');
+                    isValid = false;
+                }
+                if (password !== confirmPassword) {
+                    $('#confirmPasswordError').text('Mật khẩu nhập lại không khớp.').addClass('active');
+                    isValid = false;
+                }
+
+                if (!isValid) return;
+
+                // Hiển thị loading
+                $('#submitBtn').addClass('loading');
+
+                // Gửi dữ liệu qua AJAX
+                $.ajax({
+                    url: 'https://jsonplaceholder.typicode.com/users',
+                    method: 'POST',
+                    data: JSON.stringify({
+                        name: fullName,
+                        email: email,
+                        password: password
+                    }),
+                    contentType: 'application/json',
+                    success: function(response) {
+                        // Ẩn form và hiển thị thông báo thành công
+                        $('#submitBtn').removeClass('loading');
+                        $('#registerForm').slideUp(500, function() {
+                            $('#successMessage').addClass('active').fadeIn(500);
+                            $('#details').html(`
+                                <p><strong>Họ và Tên:</strong> ${response.name || fullName}</p>
+                                <p><strong>Email:</strong> ${response.email || email}</p>
+                                <p><strong>ID:</strong> ${response.id || 'N/A'}</p>
+                            `);
+                        });
+                    },
+                    error: function() {
+                        $('#submitBtn').removeClass('loading');
+                        $('#registerForm').after('<p class="error active">Server bận, vui lòng thử lại sau.</p>');
+                    }
+                });
+            });
+
+            // Xử lý nút "Xem chi tiết"
+            $('#viewDetails').on('click', function() {
+                $('#details').slideToggle(500);
+            });
+        });
+    </script>
+</body>
+</html>

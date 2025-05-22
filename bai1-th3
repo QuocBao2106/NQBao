@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Công Việc</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            background: linear-gradient(135deg, #6e8efb, #a777e3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .todo-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+            max-width: 600px;
+            width: 100%;
+            padding: 30px;
+            margin: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+            font-size: 28px;
+            font-weight: 600;
+        }
+
+        .input-section {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        #taskInput {
+            padding: 14px;
+            font-size: 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            outline: none;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        #taskInput:focus {
+            border-color: #6e8efb;
+            box-shadow: 0 0 8px rgba(110, 142, 251, 0.3);
+        }
+
+        #taskInput::placeholder {
+            color: #aaa;
+        }
+
+        .error {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .input-section button {
+            padding: 14px;
+            font-size: 16px;
+            font-weight: 500;
+            background: #6e8efb;
+            border: none;
+            border-radius: 8px;
+            color: white;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .input-section button:hover {
+            background: #5a75e0;
+            transform: translateY(-2px);
+        }
+
+        .filter-section {
+            margin-bottom: 20px;
+        }
+
+        .filter-section select {
+            width: 100%;
+            padding: 12px;
+            font-size: 16px;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+            background: #f8f9fa;
+            cursor: pointer;
+            transition: border-color 0.3s;
+        }
+
+        .filter-section select:focus {
+            border-color: #6e8efb;
+            outline: none;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            display: flex;
+            align-items: center;
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 10px;
+            transition: transform 0.2s, box-shadow 0.2s;
+            animation: slideIn 0.3s ease;
+        }
+
+        li:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        li.completed span {
+            text-decoration: line-through;
+            color: #888;
+        }
+
+        li span {
+            flex: 1;
+            font-size: 16px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        li span i {
+            color: #6e8efb;
+        }
+
+        li.completed span i {
+            color: #28a745;
+        }
+
+        .delete-btn {
+            background: #dc3545;
+            padding: 8px 12px;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: background 0.3s, transform 0.2s;
+        }
+
+        .delete-btn:hover {
+            background: #c82333;
+            transform: translateY(-2px);
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @media (max-width: 480px) {
+            .todo-container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 24px;
+            }
+
+            #taskInput, .input-section button, .filter-section select {
+                font-size: 14px;
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="todo-container">
+        <h1>Quản Lý Công Việc</h1>
+        <div class="input-section">
+            <input type="text" id="taskInput" placeholder="Nhập công việc mới...">
+            <div class="error" id="errorMessage">Vui lòng nhập nội dung công việc!</div>
+            <button onclick="addTask()">Thêm công việc</button>
+        </div>
+        <div class="filter-section">
+            <select id="filter" onchange="filterTasks()">
+                <option value="all">Tất cả</option>
+                <option value="active">Chưa hoàn thành</option>
+                <option value="completed">Đã hoàn thành</option>
+            </select>
+        </div>
+        <ul id="taskList"></ul>
+    </div>
+
+    <script>
+        // Mảng lưu trữ công việc
+        let tasks = [];
+
+        // Load tasks từ localStorage khi trang được tải
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTasksFromLocalStorage();
+            renderTasks();
+        });
+
+        // Hàm thêm công việc mới
+        function addTask() {
+            const taskInput = document.getElementById('taskInput');
+            const errorMessage = document.getElementById('errorMessage');
+            const taskText = taskInput.value.trim();
+
+            if (taskText === '') {
+                errorMessage.style.display = 'block';
+                taskInput.style.borderColor = '#dc3545';
+                return;
+            }
+
+            errorMessage.style.display = 'none';
+            taskInput.style.borderColor = '#e0e0e0';
+
+            const task = {
+                id: Date.now(),
+                text: taskText,
+                isDone: false
+            };
+
+            tasks.push(task);
+            saveTasksToLocalStorage();
+            renderTasks();
+
+            taskInput.value = '';
+        }
+
+        // Hàm render danh sách công việc
+        function renderTasks() {
+            const taskList = document.getElementById('taskList');
+            const filter = document.getElementById('filter').value;
+
+            const filteredTasks = tasks.filter(task => {
+                if (filter === 'active') return !task.isDone;
+                if (filter === 'completed') return task.isDone;
+                return true;
+            });
+
+            taskList.innerHTML = '';
+
+            filteredTasks.forEach(task => {
+                const li = document.createElement('li');
+                if (task.isDone) li.classList.add('completed');
+
+                const span = document.createElement('span');
+                const icon = document.createElement('i');
+                icon.className = task.isDone ? 'fas fa-check-circle' : 'far fa-circle';
+                span.appendChild(icon);
+                span.appendChild(document.createTextNode(' ' + task.text));
+                span.onclick = () => toggleTask(task.id);
+
+                const deleteBtn = document.createElement('button');
+                deleteBtn.innerHTML = '<i class="fas fa-trash"></i>';
+                deleteBtn.className = 'delete-btn';
+                deleteBtn.onclick = () => deleteTask(task.id);
+
+                li.appendChild(span);
+                li.appendChild(deleteBtn);
+                taskList.appendChild(li);
+            });
+        }
+
+        // Hàm đánh dấu hoàn thành công việc
+        function toggleTask(id) {
+            tasks = tasks.map(task => {
+                if (task.id === id) {
+                    return { ...task, isDone: !task.isDone };
+                }
+                return task;
+            });
+            saveTasksToLocalStorage();
+            renderTasks();
+        }
+
+        // Hàm xóa công việc
+        function deleteTask(id) {
+            tasks = tasks.filter(task => task.id !== id);
+            saveTasksToLocalStorage();
+            renderTasks();
+        }
+
+        // Hàm lưu vào localStorage
+        function saveTasksToLocalStorage() {
+            localStorage.setItem('tasks', JSON.stringify(tasks));
+        }
+
+        // Hàm load từ localStorage
+        function loadTasksFromLocalStorage() {
+            const storedTasks = localStorage.getItem('tasks');
+            if (storedTasks) {
+                tasks = JSON.parse(storedTasks);
+            }
+        }
+
+        // Hàm lọc công việc
+        function filterTasks() {
+            renderTasks();
+        }
+    </script>
+</body>
+</html>
